@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\dev\NiceTry\</FILEPATH>
+      <FILENAME>mve_device.h</FILENAME>
+      <LINE>23</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'mve::QueueFamilyIndices::graphicsFamily' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>mve::QueueFamilyIndices::{ctor}</FUNCTION>
+    <DECORATED>??0QueueFamilyIndices@mve@@QEAA@XZ</DECORATED>
+    <FUNCLINE>23</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>mve::QueueFamilyIndices::graphicsFamily</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\dev\NiceTry\</FILEPATH>
+      <FILENAME>mve_device.h</FILENAME>
+      <LINE>23</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'mve::QueueFamilyIndices::presentFamily' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>mve::QueueFamilyIndices::{ctor}</FUNCTION>
+    <DECORATED>??0QueueFamilyIndices@mve@@QEAA@XZ</DECORATED>
+    <FUNCLINE>23</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>mve::QueueFamilyIndices::presentFamily</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\dev\NiceTry\</FILEPATH>
+      <FILENAME>mve_device.h</FILENAME>
+      <LINE>15</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'mve::SwapChainSupportDetails::capabilities' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>mve::SwapChainSupportDetails::{ctor}</FUNCTION>
+    <DECORATED>??0SwapChainSupportDetails@mve@@QEAA@XZ</DECORATED>
+    <FUNCLINE>15</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>mve::SwapChainSupportDetails::capabilities</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

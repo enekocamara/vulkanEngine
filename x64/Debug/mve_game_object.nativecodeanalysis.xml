@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\dev\NiceTry\</FILEPATH>
+      <FILENAME>mve_game_object.h</FILENAME>
+      <LINE>21</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'mve::Transform2dComponent::rotation' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>mve::Transform2dComponent::{ctor}</FUNCTION>
+    <DECORATED>??0Transform2dComponent@mve@@QEAA@XZ</DECORATED>
+    <FUNCLINE>21</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>mve::Transform2dComponent::rotation</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

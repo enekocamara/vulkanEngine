@@ -5,9 +5,11 @@ c:\dev\nicetry\x64\debug\mve_window.obj
 c:\dev\nicetry\x64\debug\mve_swapchain.obj
 c:\dev\nicetry\x64\debug\mve_pipeline.obj
 c:\dev\nicetry\x64\debug\mve_model.obj
+c:\dev\nicetry\x64\debug\mve_game_object.obj
 c:\dev\nicetry\x64\debug\mve_device.obj
 c:\dev\nicetry\x64\debug\first_app.obj
-c:\dev\nicetry\x64\debug\mve_game_object.obj
+c:\dev\nicetry\x64\debug\mve_renderer.obj
+c:\dev\nicetry\x64\debug\simple_render_system.obj
 c:\dev\nicetry\x64\debug\project1.exe
 c:\dev\nicetry\x64\debug\project1.ilk
 c:\dev\nicetry\x64\debug\project1.pdb

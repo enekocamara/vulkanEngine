@@ -49,9 +49,25 @@ namespace mve {
 
 	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<MveGameObject>& gameObjects) {
 		mvePipeline->bind(commandBuffer);
-		explodingTriangle(commandBuffer, gameObjects);
-	}
 
+		for (auto& object : gameObjects) {
+			object.transform.rotation.y = glm::mod(object.transform.rotation.y + 0.01f, glm::two_pi<float>());
+			object.transform.rotation.x = glm::mod(object.transform.rotation.x + 0.005f, glm::two_pi<float>());
+			SimplePushConstantData push{};
+			push.color = object.color;
+			push.transform = object.transform.mat4();
+			vkCmdPushConstants(
+				commandBuffer,
+				pipelineLayout,
+				VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+				0,
+				sizeof(SimplePushConstantData),
+				&push);
+			object.model->bind(commandBuffer);
+			object.model->draw(commandBuffer);
+		}
+	}
+	/*
 	void SimpleRenderSystem::explodingTriangle(VkCommandBuffer commandBuffer, std::vector<MveGameObject>& gameObjects) {
 		float i = 0;
 		for (auto& object : gameObjects) {
@@ -80,10 +96,6 @@ namespace mve {
 		float i = 0;
 
 		for (auto& object : gameObjects) {
-			//object.transform2d.rotation = glm::mod(object.transform2d.rotation + 0.1f, glm::two_pi<float>());
-			float scale = object.transform2d.scale.x + (i * 0.1f) * i * 0.01;
-			object.transform2d.scale.x = scale;
-			object.transform2d.scale.y = scale;
 			SimplePushConstantData push{};
 			push.offset = object.transform2d.translation;
 			push.color = object.color;
@@ -99,5 +111,5 @@ namespace mve {
 			object.model->draw(commandBuffer);
 			i++;
 		}
-	}
+	}*/
 }

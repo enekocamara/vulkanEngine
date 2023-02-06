@@ -1,5 +1,7 @@
 #include "first_app.h"
 #include "simple_render_system.h"
+#include "gravity.h"
+#include "geometry.h"
 
 #include <stdexcept>
 #include <vector>
@@ -29,72 +31,114 @@ namespace mve {
 		vkDeviceWaitIdle(mveDevice.device());
 	}
 
-	void FirstApp::makeTriangle(std::vector<MveModel::Vertex>& vertices,
-			glm::vec2 left,
-			glm::vec2 right,
-			glm::vec2 up) {
-		vertices.push_back({ { up },{ 1.0f, 0.0f, 0.0f} });
-		vertices.push_back({ { right },{ 0.0f, 1.0f, 0.0f} });
-		vertices.push_back({ { left },{ 0.0f, 0.0f, 1.0f} });
-	}
-
-	void FirstApp::sierpinski(std::vector<MveModel::Vertex>& vertices,
-		glm::vec2 left, glm::vec2 right, glm::vec2 up, int depth) {
-		if (depth <= 0)
-			makeTriangle(vertices, left, right, up);
-		else {
-			auto leftUp = 0.5f * (left + up);
-			auto rightUp = 0.5f * (right + up);
-			auto leftRight = 0.5f * (left + right);
-			sierpinski(vertices, left, leftRight, leftUp, depth - 1);
-			sierpinski(vertices, leftRight, right, rightUp, depth - 1);
-			sierpinski(vertices, leftUp, rightUp, up, depth - 1);
-		}
-	}
-
-	void FirstApp::grid(std::vector<MveModel::Vertex>& vertices, size_t depth) {
-		/*for (size_t j = 0; j < depth; j++) {
-			for (size_t i = 0; i < depth; i++) {
-				makeTriangle(vertices, left, right, up);
-			}
-		}*/
-	}
-
 	void FirstApp::loadGameObjects() {
-		std::vector<MveModel::Vertex> vertices;
-		explodeTriangles(vertices);
+		std::shared_ptr<MveModel> mveModel = createCubeModel(mveDevice, glm::vec3{ .0f });
+
+		auto cube = MveGameObject::createGameObject();
+		cube.model = mveModel;
+		cube.transform.translation = { .0f, .0f, .5f };
+		cube.transform.scale = { .5f, .5f, .5f };
+		gameObjects.push_back(std::move(cube));
 	}
-
-	void FirstApp::explodeTriangles(std::vector<MveModel::Vertex>& vertices) {
-		sierpinski(vertices, { 0.2f, 0.2f }, { -0.2f, 0.2f }, { 0.0f, -0.2f }, 11);
-
-		auto mveModel = std::make_shared<MveModel>(mveDevice, vertices);
-
-		for (int i = 0; i < 10; i++) {
-			auto triangle = MveGameObject::createGameObject();
-			triangle.model = mveModel;
-			triangle.color = { .1f, 0.1f + static_cast<float>(i) / 10.0f , .1f };
-			triangle.transform2d.translation.x = .0f;
-			triangle.transform2d.scale = { 1.f, 1.f };// { 1.f + static_cast<float>(i) / 5.0f, 1.f + static_cast<float>(i) / 5.0f };
-			triangle.transform2d.rotation = 0.0f;
-			gameObjects.push_back(std::move(triangle));
-		}
-	}
-
-	void FirstApp::gravity(std::vector<MveModel::Vertex>& vertices) {
+	/*
+	void FirstApp::gravity() {
+		// create some models
+		std::shared_ptr<MveModel> squareModel = Geometry::createSquareModel(mveDevice,{ .5f, .0f });
+		std::shared_ptr<MveModel> circleModel = Geometry::createCircleModel(mveDevice, 70);
 		
-		grid(vertices, 10);
+		//physic objects
 
-		auto mveModel = std::make_shared<MveModel>(mveDevice, vertices);
+		auto red = MveGameObject::createGameObject();
+		red.color = { 1.0f, 0.0f, 0.0f };
+		red.model = circleModel;
+		red.transform2d.scale = { 0.005f, 0.005f };
+		red.transform2d.translation = { .5f, .5f };
+		red.rigidBody2d.mass = 10;
+		red.rigidBody2d.velocity = { -.5f, .0f };
+		physicsObjects.push_back(std::move(red));
+		auto blue = MveGameObject::createGameObject();
 
-		for (int i = 0; i < 10; i++) {
-			auto triangle = MveGameObject::createGameObject();
-			triangle.model = mveModel;
-			triangle.color = { .1f, 0.1f + static_cast<float>(i) / 10.0f , .1f };
-			triangle.transform2d.translation.x = .0f;
-			triangle.transform2d.scale = { 1.f, 1.f };// { 1.f + static_cast<float>(i) / 5.0f, 1.f + static_cast<float>(i) / 5.0f };
-			triangle.transform2d.rotation = 0.0f;
-			gameObjects.push_back(std::move(triangle));
+		blue.color = { 0.0f, 0.0f, 1.0f };
+		blue.model = circleModel;
+		blue.transform2d.scale = { 0.05f, 0.05f };
+		blue.transform2d.translation = { -.45f, -.25f };
+		blue.rigidBody2d.mass = 10;
+		blue.rigidBody2d.velocity = { .5f, .0f };
+
+		
+		physicsObjects.push_back(std::move(blue));
+
+		//grabity field
+		int gridCount = 20;
+		for (int i = 0; i < gridCount; i++) {
+			for (int j = 0; j < gridCount; j++) {
+				auto vf = MveGameObject::createGameObject();
+				vf.transform2d.scale = glm::vec2(0.005f);
+				vf.transform2d.translation = {
+					-1.0f + (i + 0.5f) * 2.0f / gridCount,
+					-1.0f + (j + 0.5f) * 2.0f / gridCount };
+				vf.color = glm::vec3(1.0f);
+				vf.model = squareModel;
+				vectorField.push_back(std::move(vf));
+			}
+		}		
+	}	*/
+
+	std::unique_ptr<MveModel> FirstApp::createCubeModel(MveDevice& device, glm::vec3 offset) {
+		std::vector<MveModel::Vertex> vertices{
+
+			// left face (white)
+			{{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+			{{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+			{{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
+			{{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+			{{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
+			{{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+
+			// right face (yellow)
+			{{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+			{{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
+			{{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+			{{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+
+			// top face (orange, remember y axis points down)
+			{{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+			{{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+			{{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+			{{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+			{{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+			{{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+
+			// bottom face (red)
+			{{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+			{{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
+			{{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+			{{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+
+			// nose face (blue)
+			{{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+			{{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+			{{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+			{{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+			{{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+			{{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+
+			// tail face (green)
+			{{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+			{{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+			{{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+			{{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+			{{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+			{{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+
+		};
+		for (auto& v : vertices) {
+			v.position += offset;
 		}
+		return std::make_unique<MveModel>(device, vertices);
 	}
 }

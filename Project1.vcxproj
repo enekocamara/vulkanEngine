@@ -142,6 +142,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="first_app.cpp" />
+    <ClCompile Include="geometry.cpp" />
+    <ClCompile Include="gravity.cpp" />
     <ClCompile Include="mve_device.cpp" />
     <ClCompile Include="mve_game_object.cpp" />
     <ClCompile Include="mve_model.cpp" />
@@ -154,6 +156,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="first_app.h" />
+    <ClInclude Include="geometry.h" />
+    <ClInclude Include="gravity.h" />
     <ClInclude Include="mve_device.h" />
     <ClInclude Include="mve_game_object.h" />
     <ClInclude Include="mve_model.h" />

@@ -8,7 +8,6 @@
 #include <memory>
 #include <vector>
 namespace mve {
-
 class FirstApp
 {
 public:
@@ -21,25 +20,25 @@ public:
 	FirstApp(const FirstApp&) = delete;
 	FirstApp& operator=(const FirstApp&) = delete;
 	void run();
-private:
-	void makeTriangle(std::vector<MveModel::Vertex>& vertices,
+	
+	static void makeRectangle(std::vector<MveModel::Vertex>& vertices,
 		glm::vec2 left,
 		glm::vec2 right,
 		glm::vec2 up);
-	void sierpinski(std::vector<MveModel::Vertex>& vertices,
-		glm::vec2 left,
-		glm::vec2 right,
-		glm::vec2 up,
-		int depth);
+private:
+	
 	void grid(std::vector<MveModel::Vertex>& vertices, size_t depht);
-	void gravity(std::vector<MveModel::Vertex>& vertices);
+	void gravity();
 	void explodeTriangles(std::vector<MveModel::Vertex>& vertices);
 	void loadGameObjects();
+	std::unique_ptr<MveModel> createCubeModel(MveDevice& device, glm::vec3 offset);
 
 	MveWindow mveWindow{WIDTH, HEIGHT, "Hello Vulkan"};
 	MveDevice mveDevice{mveWindow};
 	MveRenderer mveRenderer{mveWindow, mveDevice};
 	std::vector<MveGameObject> gameObjects;
+	std::vector<MveGameObject> physicsObjects;
+	std::vector<MveGameObject> vectorField;
 };
 
 }
